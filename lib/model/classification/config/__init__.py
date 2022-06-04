@@ -1,0 +1,1 @@
+from .hierAttn import getConfiguration

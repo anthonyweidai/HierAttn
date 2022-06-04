@@ -1,0 +1,22 @@
+# data
+*.csv
+*.xlsx
+*.zip
+
+# File
+test.py
+test2.py
+
+# Folder
+exp
+clound
+Backup
+runs
+dataset
+savemodel
+.vscode
+__pycache__
+
+# Keep
+!lib/data/dataset
+!lib/plot/data/*
