@@ -4,7 +4,7 @@
 Wei Dai, Rui Liu, Tianyi Wu, Min Wang, Jianqin Yin, Jun Liu        
 In arxiv, 2022. [[Paper](https://arxiv.org/abs/2205.04326)]
 
-<p align="left"> <img src=readme/Architecture.gif align="center" width="1080px">
+<p align="left"> <img src=readme/Architecture.pdf align="center" width="1080px">
 
 
 
