@@ -26,7 +26,7 @@ class Train(object):
         NumRepeat=0, LrRate=0.0002, Beta1=0.9, Beta2=0.999, WeightDecay=0, 
         Epochs=500, BatchSize=32, StopStation=50, ResizeRes=224, 
         MyOptimizer='Adam', ModelName='Alexnet', SetName='ITG', 
-        LrDecay=False, SchedularFnName='base', PreTrained=0, PreTrainedWeight='', WeightFrize=0,
+        LrDecay=False, SchedularFnName='base', PreTrained=0, PreTrainedWeight='', WeightFreeze=0,
         ) -> None:
        
         Tick0 = time.perf_counter()
@@ -57,7 +57,7 @@ class Train(object):
         self.SchedularFnName = SchedularFnName
         self.PreTrained = PreTrained
         self.PreTrainedWeight = PreTrainedWeight
-        self.WeightFrize = WeightFrize
+        self.WeightFreeze = WeightFreeze
         
         self.filePathInit()
         self.logFieldInit()
@@ -77,7 +77,7 @@ class Train(object):
         self.ExpLogPath = './exp/train_cnn/log.csv' # No need to change
         self.InputLogPath = DestPath + 'input_param.csv'
         self.ModelSavePath =  DestPath + 'model'  # Save weight
-        self.TrainRecordPath = DestPath + '/metrics/record'  # Save indicators during training
+        self.TrainRecordPath = DestPath + '/metrics'  # Save indicators during training
         self.TrainMetricsPath =  DestPath + 'best_metrics.csv'  # Save metrics
         
     def logFieldInit(self):
@@ -85,7 +85,7 @@ class Train(object):
         self.LogField = [
             'exp', 'date', 'Model', 'Dataset', 
             'Optimizer', 'LrDecay', 'Schedular', 
-            'PreTrained', 'WeightFrize',
+            'PreTrained', 'WeightFreeze',
             'NumberofSplit', 'NumRepeat', 'LrRate', 'Beta1', 'Beta2', 
             'Epochs', 'BatchSize', 'StopStation', 'ResizeResolution'
             ] # Define header
@@ -93,7 +93,7 @@ class Train(object):
             self.ExpCount, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 
             self.ModelName, self.SetName,
             self.MyOptimizer, self.LrDecay, self.SchedularFnName, 
-            self.PreTrained, self.WeightFrize,
+            self.PreTrained, self.WeightFreeze,
             self.NumSplit, self.NumRepeat, self.LrRate, self.Beta1, self.Beta2, 
             self.Epochs, self.BatchSize, self.StopStation, self.ResizeRes
             ]
@@ -112,7 +112,7 @@ class Train(object):
                 Model = torch.nn.DataParallel(Model)
                 
             if PreTrained:
-                if WeightFrize == 3:
+                if WeightFreeze == 3:
                     Model = loadModelWeight(Model, 2, self.PreTrainedWeight, self.PreTrained)
                 else:
                     Model = loadModelWeight(Model, 0, self.PreTrainedWeight, self.PreTrained)
@@ -148,34 +148,36 @@ class Train(object):
                 time.sleep(0.5)  # To prevent possible deadlock during epoch transition
                 Tick1 = time.perf_counter()
                 
-                if Epoch == Milestones and self.WeightFrize == 3 and self.PreTrained:
-                    Model = wightFrozen(Model, self.WeightFrize) # From Milestones + 1, stop all layers' weight frizing
+                if Epoch == Milestones and self.WeightFreeze == 3 and self.PreTrained:
+                    Model = wightFrozen(Model, self.WeightFreeze) # From Milestones + 1, stop all layers' weight frizing
                 
                 TCnn = CnnTrainer(Device, self.NumClasses, Optimizer, Model, TrainDL, TestDL) # training class
                 
-                AvgRecall = np.mean(TCnn.Recall)
-                AvgPrecision = np.mean(TCnn.Precision)
-                AvgF1Score = np.mean(TCnn.F1Score)
-                AvgSpecificity = np.mean(TCnn.Specificity)
-                
-                StopIndicator = TCnn.TestLoss if self.IndicatorType == 'loss' else TCnn.TestAcc
-                if (StopIndicator < BestStopIndicator and self.IndicatorType == 'loss') or \
-                (StopIndicator > BestStopIndicator and self.IndicatorType != 'loss'):
-                    BestEpoch = Epoch
-                    BestStopIndicator = StopIndicator
-                    torch.save(Model.state_dict(), '%s/%s_val%d.pth' % (self.ModelSavePath, self.ModelName, self.Split + 1))
-                    Temp = 0
-                else:
-                    Temp += 1
+                with torch.no_grad():
+                    AvgRecall = np.mean(TCnn.Recall)
+                    AvgPrecision = np.mean(TCnn.Precision)
+                    AvgF1Score = np.mean(TCnn.F1Score)
+                    AvgSpecificity = np.mean(TCnn.Specificity)
                     
-                self.TrainLossList.append(TCnn.TrainLoss)
-                self.TrainAccuList.append(TCnn.TrainAcc)
-                self.TestLossList.append(TCnn.TestLoss)
-                self.TestAccuList.append(TCnn.TestAcc)
-                self.AvgRecallList.append(AvgRecall)
-                self.AvgPrecisionList.append(AvgPrecision)
-                self.AvgF1ScoreList.append(AvgF1Score)
-                self.AvgSpecificityList.append(AvgSpecificity)
+                    StopIndicator = TCnn.TestLoss if self.IndicatorType == 'loss' else TCnn.TestAcc
+                    if (StopIndicator < BestStopIndicator and self.IndicatorType == 'loss') or \
+                    (StopIndicator > BestStopIndicator and self.IndicatorType != 'loss'):
+                        BestEpoch = Epoch
+                        BestStopIndicator = StopIndicator
+                        torch.save(Model.state_dict(), '%s/%s_val%d.pth' % (self.ModelSavePath, self.ModelName, self.Split + 1))
+                        Temp = 0
+                    else:
+                        Temp += 1
+                        
+                    self.TrainLossList.append(TCnn.TrainLoss)
+                    self.TrainAccuList.append(TCnn.TrainAcc)
+                    self.TestLossList.append(TCnn.TestLoss)
+                    self.TestAccuList.append(TCnn.TestAcc)
+                    self.AvgRecallList.append(AvgRecall)
+                    self.AvgPrecisionList.append(AvgPrecision)
+                    self.AvgF1ScoreList.append(AvgF1Score)
+                    self.AvgSpecificityList.append(AvgSpecificity)
+                    
                 
                 if self.LrDecay:
                     if "cosine" in self.SchedularFnName:
@@ -196,16 +198,17 @@ class Train(object):
                 
                 if Temp == self.StopStation:
                     break
+            
+            with torch.no_grad():
+                self.StopEpochList[self.Split] = Epoch + 1
                 
-            self.StopEpochList[self.Split] = Epoch + 1
-            
-            ## Writing results
-            self.writeAvgMetrics()
-            self.writeBestMetrics()
-            
-            if self.Split >= self.NumRepeat - 1:
-                self.writeAvgBestMetrics()
-                break
+                ## Writing results
+                self.writeAvgMetrics()
+                self.writeBestMetrics()
+                
+                if self.Split >= self.NumRepeat - 1:
+                    self.writeAvgBestMetrics()
+                    break
           
     def writeAvgMetrics(self):
         # Write avrage training metrics record
@@ -225,7 +228,7 @@ class Train(object):
             'TrainLoss', 'TrainAccuracy', 'TestLoss', 'TestAccuracy', 
             'AvgRecall', 'AvgPrecision', 'AvgF1Score', 'AvgSpecificity'
             ]
-        Output.to_csv(self.TrainRecordPath + '_val{}.csv'.format(self.Split + 1), 
+        Output.to_csv(self.TrainRecordPath + 'record_val{}.csv'.format(self.Split + 1), 
                       columns=OutputFieldNames, encoding='utf-8')
     
     def writeBestMetrics(self):
@@ -286,7 +289,7 @@ if __name__ == "__main__":
     MyOptimizer = 'adamw'
     WeightDecay = 1.e-2 if 'adamw' in MyOptimizer else 0
     PreTrained = 2
-    WeightFrize = 3
+    WeightFreeze = 3
     Epochs = 500
     BatchSize = 64 # 8 multiple
     ResizeRes = 256
@@ -325,4 +328,4 @@ if __name__ == "__main__":
                   NumRepeat, LrRate, Beta1, Beta2, WeightDecay, 
                   Epochs, BatchSize, StopStation, ResizeRes, 
                   MyOptimizer, ModelName, SetName, 
-                  LrDecay, SchedularFnName, PreTrained, PreTrainedWeight, WeightFrize)
+                  LrDecay, SchedularFnName, PreTrained, PreTrainedWeight, WeightFreeze)

@@ -121,15 +121,15 @@ def makeDivisible(v: float, divisor: int, min_value: Optional[int] = None) -> in
     return new_v
 
 
-def wightFrozen(Model, WeightFrize, TransferFlag=0,  PreTrained=1):
+def wightFrozen(Model, WeightFreeze, TransferFlag=0,  PreTrained=1):
     # ModelDict = Model.state_dict()
-    if WeightFrize == 0:
+    if WeightFreeze == 0:
         print("Skin freezing layers")
         return Model
     else:
         Idx = 0
         for Name, Param in Model.named_parameters():
-            if WeightFrize == 1: 
+            if WeightFreeze == 1: 
                 # if 'features' in Name:
                 # Judger = 'classifier' not in Name.lower()
                 # if PreTrained == 2:
@@ -139,7 +139,7 @@ def wightFrozen(Model, WeightFrize, TransferFlag=0,  PreTrained=1):
                     Param.requires_grad = False
                 else:
                     print(Name, Param.requires_grad)      
-            elif WeightFrize == 2:
+            elif WeightFreeze == 2:
                 # Frize the layers without transferred weight
                 while 1:
                     if TransferFlag[Idx] == 1:
@@ -151,17 +151,17 @@ def wightFrozen(Model, WeightFrize, TransferFlag=0,  PreTrained=1):
                         print(Name, Param.requires_grad)
                         break
                 Idx += 1
-            elif WeightFrize == 3:
+            elif WeightFreeze == 3:
                 # For step weight freezing
                 Param.requires_grad = True
-            elif WeightFrize == 4:
+            elif WeightFreeze == 4:
                 Param.requires_grad = False
             else:
                 print(Name, Param.requires_grad)
                 
-        if WeightFrize == 3:
+        if WeightFreeze == 3:
             print("Unfreeze all layers")
-        elif WeightFrize == 4:
+        elif WeightFreeze == 4:
             print("Freeze all layers")
             
         return Model
@@ -175,7 +175,7 @@ def ignoreTransfer(NewKey, IgnoreStrList, TransferFlag, IdxNew, FalseFlag=0):
     return TransferFlag
 
 
-def loadModelWeight(Model, WeightFrize, PreTrainedWeight, 
+def loadModelWeight(Model, WeightFreeze, PreTrainedWeight, 
                     PreTrained=1, DropLast=False):
     print('Knowledge transfer from: %s' %(PreTrainedWeight))
     
@@ -240,12 +240,12 @@ def loadModelWeight(Model, WeightFrize, PreTrainedWeight,
                 elif IdxNew == len(NewDictKeys) - 2:
                     break
     
-        print('The number of transfer layers: %d' %(Count))
+        print('The number of transferred layers: %d' %(Count))
  
     ModelDict.update(PretrainedDict)
     Model.load_state_dict(ModelDict, strict=False)
     
-    Model = wightFrozen(Model, WeightFrize, TransferFlag, PreTrained)
+    Model = wightFrozen(Model, WeightFreeze, TransferFlag, PreTrained)
 
     return Model
 

@@ -22,11 +22,11 @@ def workerManager(BatchSize):
     NUM_PROC = multiprocessing.cpu_count()
     if CUDA_AVAI:
         if BatchSize <= 32:
-            WorkerKanban = BatchSize // 2
-        elif BatchSize <= 64:
             WorkerKanban = BatchSize // 4
-        else:
+        elif BatchSize <= 64:
             WorkerKanban = BatchSize // 8
+        else:
+            WorkerKanban = BatchSize // 16
         NumWorkers = ceil(min(WorkerKanban, NUM_PROC - 2) / 2.) * 2
         PinMemory = True
     else:

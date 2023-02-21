@@ -12,7 +12,7 @@ The data of ISIC2019 is dermoscopy skin lesion image.
 
 - IH undersample using `lib/tools/undersampling.py`.
 
-- Create the 10 split subset for cross-validation.
+- Create the 10 split subset for cross-validation (the augmented data and its original image should be on the same subset).
 
 - The output data structure should be:
 
@@ -47,7 +47,7 @@ The data of PAD20 is smartphone skin lesion image.
 
 - IH undersample using `lib/tools/undersampling.py`.
 
-- Create the 10 split subset for cross-validation.
+- Create the 10 split subset for cross-validation (the augmented data and its original image should be on the same subset).
 
 - The output data structure should be:
 

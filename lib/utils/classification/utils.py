@@ -4,6 +4,7 @@ from tqdm import tqdm
 import torch
 import torch.nn as nn
 
+
 class CnnTrainer(object):
     def __init__(self, Device, NumClasses, Optim, Model, TrainDL, TestDL) -> None:
             
@@ -11,7 +12,7 @@ class CnnTrainer(object):
         NumTotal = 0
         RunningLoss = 0
 
-        TruePositives, FalsePositives, TrueNegatives, FalseNegatives = np.zeros((4, NumClasses), dtype=int)
+        TruePositive, FalsePositive, TrueNegative, FalseNegative = np.zeros((4, NumClasses), dtype=int)
         Recall, Precision, Specificity, F1Score = np.zeros((4, NumClasses), dtype=float)
         
         LossFn = nn.CrossEntropyLoss().to(Device)
@@ -28,13 +29,15 @@ class CnnTrainer(object):
             Loss.backward()  # backpropagation
             Optim.step()  # optimize model's weight
             
-            YPred = torch.argmax(YPred, dim=1)
-            NumCorrect += (torch.eq(YPred, y)).sum().item()
-            NumTotal += y.size(0)
-            RunningLoss += Loss.item()
-                
-        TrainLoss = RunningLoss / NumTotal
-        TrainAcc = NumCorrect / NumTotal
+            with torch.no_grad():
+                YPred = torch.argmax(YPred, dim=1)
+                NumCorrect += (torch.eq(YPred, y)).sum().item()
+                NumTotal += y.size(0)
+                RunningLoss += Loss.item()
+        
+        with torch.no_grad():
+            TrainLoss = RunningLoss / NumTotal
+            TrainAcc = NumCorrect / NumTotal
 
         NumCorrect = 0
         NumTotal = 0
@@ -60,31 +63,31 @@ class CnnTrainer(object):
                     for k in range(NumClasses):
                         if y[i].item() == k:
                             if YPred[i] == y[i]:
-                                TruePositives[k] += 1
+                                TruePositive[k] += 1
                             else:
-                                TrueNegatives[k] += 1
+                               FalseNegative[k] += 1
                         else: 
                             if YPred[i].item() == k:
-                                FalsePositives[k] += 1
+                                FalsePositive[k] += 1
                             else:
-                                FalseNegatives[k] += 1
+                                TrueNegative[k] += 1
 
         TestLoss = RunningLoss / NumTotal
         TestAcc = NumCorrect / NumTotal
 
         # Compute metrics: Recall, Precision, F-score, Specificity
         for k in range(NumClasses):
-            TrueAll = TruePositives[k] + TrueNegatives[k]
-            PositivesAll = TruePositives[k] + FalsePositives[k]
-            TNAndFP = TrueNegatives[k] + FalsePositives[k]
-            if TrueAll != 0:
-                Recall[k] = TruePositives[k] / TrueAll
-            if PositivesAll != 0:
-                Precision[k] = TruePositives[k] / PositivesAll
+            PositiveAll = TruePositive[k] + FalseNegative[k]
+            TPAndFP = TruePositive[k] + FalsePositive[k]
+            NegativeAll = TrueNegative[k] + FalsePositive[k]
+            if PositiveAll != 0:
+                Recall[k] = TruePositive[k] / PositiveAll
+            if TPAndFP != 0:
+                Precision[k] = TruePositive[k] / TPAndFP
             if (Recall[k] + Precision[k]) != 0:
                 F1Score[k] = 2 * Recall[k] * Precision[k] / (Recall[k] + Precision[k])
-            if TNAndFP != 0:
-                Specificity[k] = TrueNegatives[k] / TNAndFP
+            if NegativeAll != 0:
+                Specificity[k] = TrueNegative[k] / NegativeAll
 
         self.TrainLoss = TrainLoss
         self.TrainAcc = TrainAcc

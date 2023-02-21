@@ -17,20 +17,14 @@ class Transforms(transforms.Compose):
         ImgHeight, ImgWidth = pair(ResizeRes)
         self.TF = {
             "train": transforms.Compose([
-                transforms.RandomRotation(10),
-                transforms.RandomHorizontalFlip(),
                 transforms.Resize((ImgHeight, ImgWidth)),
+                transforms.RandomRotation(10, expand=False),
+                transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(), # divided by 255. This is how it is forces the network to be between 0 and 1.
-                # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-                # transforms.Normalize((0.5, 0.5, 0.5), [0.5, 0.5, 0.5])
             ]),
             "test": transforms.Compose([
-                # transforms.RandomHorizontalFlip(),
-                # transforms.RandomCrop(ResizeRes),
                 transforms.Resize((ImgHeight, ImgWidth)),
                 transforms.ToTensor(),
-                # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-                # transforms.Normalize((0.5, 0.5, 0.5), [0.5, 0.5, 0.5])
             ]),
         }
     
@@ -40,13 +34,12 @@ class Transforms(transforms.Compose):
 
 class Mydataset(data.Dataset):
     # For CPU dataloader
-    def __init__(self, ImgPaths, ClassNames, ResizeRes, SetType="train", Transform=None, TargetTransform=None):
+    def __init__(self, ImgPaths, ClassNames, ResizeRes, SetType="train", Transform=None):
         self.ImgPaths =  np.asarray(ImgPaths)
         self.NumClasses = len(ClassNames)
         self.ClassNames = ClassNames
         if not Transform:
             self.Transform = Transforms(ResizeRes).TF[SetType]
-        self.TargetTransform = TargetTransform
         self.getLabel()
         # self.ClassSenFactor = self.getSenFactor()
         print('The amount of ' + SetType + ' data:', self.__len__())
@@ -62,17 +55,13 @@ class Mydataset(data.Dataset):
     def __getitem__(self, index):
         ImgPath = str(self.ImgPaths[index])
         Label = self.Labels[index]  # Convert the data type of label to long int type
-        Img = Image.open(ImgPath)
-        # Change Image channels
-        if Img.mode == "RGBA":
-            r, g, b, _ = Img.split()
-            Img = Image.merge("RGB", (r, g, b))
-        if Img.mode != "RGB":
-            Img = Img.convert("RGB")
-        
+        # read images
+        try:
+            Img = Image.open(ImgPath).convert("RGB")
+        except:
+            Img = None
+            
         ImgData = self.Transform(Img)
-        if self.TargetTransform:
-            Label = self.TargetTransform(Label)
         return ImgData, Label
 
     def __len__(self):
