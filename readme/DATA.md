@@ -112,10 +112,13 @@ Please cite the corresponding references if you use the datasets and our data pr
   publisher={Elsevier}
 }
 
-@article{dai2022hierattn,
-  title={HierAttn: Effectively Learn Representations from Stage Attention and Branch Attention for Skin Lesions Diagnosis},
+@ARTICLE{dai2023deeply,
   author={Dai, Wei and Liu, Rui and Wu, Tianyi and Wang, Min and Yin, Jianqin and Liu, Jun},
-  journal={arXiv preprint arXiv:2205.04326},
-  year={2022}
-}
+  journal={IEEE Journal of Biomedical and Health Informatics}, 
+  title={Deeply Supervised Skin Lesions Diagnosis with Stage and Branch Attention}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={1-12},
+  doi={10.1109/JBHI.2023.3308697}}
 ~~~
