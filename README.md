@@ -7,8 +7,6 @@ Accepted in IEEE JBHI, 2023. [[Arxiv](https://arxiv.org/abs/2205.04326)][[Paper]
 <p align="left"> <img src=readme/Architecture2.jpg align="center" width="1080px">
 
 
-
-
 ## Installation
 
 Please refer to [INSTALL.md](readme/INSTALL.md) for installation instructions.
@@ -54,11 +52,8 @@ If you find it useful in your research, please consider citing our paper as foll
       journal={IEEE Journal of Biomedical and Health Informatics}, 
       title={Deeply Supervised Skin Lesions Diagnosis with Stage and Branch Attention}, 
       year={2023},
-      volume={},
-      number={},
-      pages={1-12},
       doi={10.1109/JBHI.2023.3308697}}
 
 
 ## Acknowledgment
-Many thanks to **[ml-cvnets](https://github.com/apple/ml-cvnets)** authors for their great framework!
+Many thanks to authors of **[ml-cvnets](https://github.com/apple/ml-cvnets)** for their great framework!

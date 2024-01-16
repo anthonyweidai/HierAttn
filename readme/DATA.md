@@ -2,17 +2,17 @@
 
 ## ISIC2019 Dataset
 
-The data of ISIC2019 is dermoscopy skin lesion image. 
+The data of ISIC2019 is a dermoscopy skin lesion image. 
 
 - Download and unzip the dataset from [Skin Lesion Images for Melanoma Classification](https://www.kaggle.com/datasets/andrewmvd/isic-2019).
 
-- Rearrange the images with same class (each class use a folder with the class name).
+- Rearrange the images with the same class (each class uses a folder with the class name).
 
 - Random oversample using `lib/tools/oversampling.py`.
 
 - IH undersample using `lib/tools/undersampling.py`.
 
-- Create the 10 split subset for cross-validation (the augmented data and its original image should be on the same subset).
+- Create the 10 split subsets for cross-validation (the augmented data and its original image should be on the same subset).
 
 - The output data structure should be:
 
@@ -37,17 +37,17 @@ The data of ISIC2019 is dermoscopy skin lesion image.
 
 ## PAD-UFES-20 (PAD20) Dataset
 
-The data of PAD20 is smartphone skin lesion image. 
+The data of PAD20 is a smartphone skin lesion image. 
 
 - Download and unzip the dataset from [PAD-UFES-20: a skin lesion dataset composed of patient data and clinical images collected from smartphones](https://data.mendeley.com/datasets/zr7vgbcyr2/1).
 
-- Rearrange the images with same class (each class use a folder with the class name).
+- Rearrange the images with the same class (each class uses a folder with the class name).
 
 - Random oversample using `lib/tools/oversampling.py`.
 
 - IH undersample using `lib/tools/undersampling.py`.
 
-- Create the 10 split subset for cross-validation (the augmented data and its original image should be on the same subset).
+- Create the 10 split subsets for cross-validation (the augmented data and its original image should be on the same subset).
 
 - The output data structure should be:
 
