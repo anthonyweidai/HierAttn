@@ -47,12 +47,17 @@ We used transfer learning to partly initialize the tunable weights of HierAttn a
 
 If you find it useful in your research, please consider citing our paper as follows:
 
-    @ARTICLE{dai2023deeply,
+    @ARTICLE{10230242,
       author={Dai, Wei and Liu, Rui and Wu, Tianyi and Wang, Min and Yin, Jianqin and Liu, Jun},
       journal={IEEE Journal of Biomedical and Health Informatics}, 
-      title={Deeply Supervised Skin Lesions Diagnosis with Stage and Branch Attention}, 
-      year={2023},
+      title={Deeply Supervised Skin Lesions Diagnosis With Stage and Branch Attention}, 
+      year={2024},
+      volume={28},
+      number={2},
+      pages={719-729},
+      keywords={Skin;Lesions;Feature extraction;Convolution;Transformers;Training;Computational modeling;Attention;deep supervision;disease classification;skin lesion;vision transformer},
       doi={10.1109/JBHI.2023.3308697}}
+
 
 
 ## Acknowledgment

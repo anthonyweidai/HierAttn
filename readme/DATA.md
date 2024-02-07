@@ -112,13 +112,15 @@ Please cite the corresponding references if you use the datasets and our data pr
   publisher={Elsevier}
 }
 
-@ARTICLE{dai2023deeply,
+@ARTICLE{10230242,
   author={Dai, Wei and Liu, Rui and Wu, Tianyi and Wang, Min and Yin, Jianqin and Liu, Jun},
   journal={IEEE Journal of Biomedical and Health Informatics}, 
-  title={Deeply Supervised Skin Lesions Diagnosis with Stage and Branch Attention}, 
-  year={2023},
-  volume={},
-  number={},
-  pages={1-12},
+  title={Deeply Supervised Skin Lesions Diagnosis With Stage and Branch Attention}, 
+  year={2024},
+  volume={28},
+  number={2},
+  pages={719-729},
+  keywords={Skin;Lesions;Feature extraction;Convolution;Transformers;Training;Computational modeling;Attention;deep supervision;disease classification;skin lesion;vision transformer},
   doi={10.1109/JBHI.2023.3308697}}
+
 ~~~
