@@ -1,8 +1,8 @@
 # HierAttn: Deeply Supervised Skin Lesions Diagnosis with Stage and Branch Attention
 
-[**Deeply Supervised Skin Lesions Diagnosis with Stage and Branch Attention**](https://ieeexplore.ieee.org/document/10230242)  
+[**Deeply Supervised Skin Lesions Diagnosis with Stage and Branch Attention**](https://doi.org/10.1109/JBHI.2023.3308697)  
 Wei Dai, Rui Liu, Tianyi Wu, Min Wang, Jianqin Yin, Jun Liu        
-Accepted in IEEE JBHI, 2023. [[Arxiv](https://arxiv.org/abs/2205.04326)][[Paper](https://ieeexplore.ieee.org/document/10230242)]
+Accepted in IEEE JBHI, 2023. [[Arxiv](https://arxiv.org/abs/2205.04326)][[Paper](https://doi.org/10.1109/JBHI.2023.3308697)]
 
 <p align="left"> <img src=readme/Architecture2.jpg align="center" width="1080px">
 
